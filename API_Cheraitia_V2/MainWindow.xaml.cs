@@ -13,10 +13,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Net.Http;
 using Newtonsoft.Json;
 using System.Security.Policy;
 using System.Collections.ObjectModel;
+
+
+using API_Cheraitia_V2.Models;
 
 
 namespace API_Cheraitia_V2
@@ -29,40 +31,41 @@ namespace API_Cheraitia_V2
         public MainWindow()
         {
             InitializeComponent();
-
-            var asyntaskwait = GetDataAsync();
+            var _ = LoadDataAsync();
         }
 
-
-        public async Task<string> GetDataAsync()
+        private async Task LoadDataAsync()
         {
-            HttpClient client = new HttpClient();
-            HttpResponseMessage response = await client.GetAsync("https://www.prevision-meteo.ch/services/json/Annecy");
-            if (response.IsSuccessStatusCode)
-            {
-                var data = await response.Content.ReadAsStringAsync();
-                Root root = JsonConvert.DeserializeObject<Root>(data);
+            var json = await GetDataAsync();
+            if (json == null)
+                return;
 
-                CurrentCondition currentcondition = root.current_condition;
+            Root root = JsonConvert.DeserializeObject<Root>(json);
 
-                FcstDay0 fcstday0 = root.fcst_day_0;
+            // Météo actuelle
+            var current = root.current_condition;
+            CityNameText.Text = root.city_info?.name ?? "Ville";
+            CurrentDateText.Text = current?.date ?? "";
+            CurrentTempText.Text = current?.tmp + " °C";
+            CurrentConditionText.Text = current?.condition;
+            CurrentHumidityText.Text = current?.humidity + " %";
+            CurrentWindText.Text = current?.wnd_spd + " km/h";
 
-                FcstDay1 fcstday1 = root.fcst_day_1;
+            if (!string.IsNullOrEmpty(current?.icon_big))
+                CurrentWeatherIcon.Source = new BitmapImage(new Uri(current.icon_big));
 
-                FcstDay3 fcstday2 = root.fcst_day_3;
-                FcstDay4 fcstDay4 = root.fcst_day_4;
+            // Prévisions : créer une liste avec fcst_day_0 à fcst_day_4
+            var days = new List<object>
+        {
+            root.fcst_day_0,
+            root.fcst_day_1,
+            root.fcst_day_2,
+            root.fcst_day_3,
+            root.fcst_day_4
+        };
 
-
-
-
-
-                return data;
-            }
-            else
-            {
-                return null;
-            }
+            ForecastItemsControl.ItemsSource = days;
         }
-
     }
-}    
+
+}

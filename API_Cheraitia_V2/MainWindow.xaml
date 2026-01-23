@@ -1,12 +1,150 @@
 ﻿<Window x:Class="API_Cheraitia_V2.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:API_Cheraitia_V2"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Météo Annecy"
+        Height="450"
+        Width="800"
+        Background="#FF1E1E2E"
+        WindowStartupLocation="CenterScreen">
 
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <!-- Météo actuelle -->
+            <RowDefinition Height="Auto"/>
+            <!-- Séparateur -->
+            <RowDefinition Height="10"/>
+            <!-- Prévisions sur plusieurs jours -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- METEO ACTUELLE -->
+        <Border Grid.Row="0"
+                CornerRadius="10"
+                Padding="15"
+                Background="#FF313244">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Infos principales -->
+                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,0">
+                    <TextBlock x:Name="CityNameText"
+                               Text="Annecy"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Foreground="White"/>
+                    <TextBlock x:Name="CurrentDateText"
+                               Text="Date"
+                               FontSize="14"
+                               Margin="0,5,0,0"
+                               Foreground="#FFBAC2DE"/>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
+                        <TextBlock x:Name="CurrentTempText"
+                                   Text="-- °C"
+                                   FontSize="36"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   Margin="0,0,10,0"/>
+                        <TextBlock x:Name="CurrentConditionText"
+                                   Text="Condition"
+                                   FontSize="16"
+                                   VerticalAlignment="Bottom"
+                                   Foreground="#FFBAC2DE"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <TextBlock Text="Humidité : "
+                                   Foreground="#FFBAC2DE"/>
+                        <TextBlock x:Name="CurrentHumidityText"
+                                   Text="-- %"
+                                   Foreground="#FFBAC2DE"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <TextBlock Text="Vent : "
+                                   Foreground="#FFBAC2DE"/>
+                        <TextBlock x:Name="CurrentWindText"
+                                   Text="-- km/h"
+                                   Foreground="#FFBAC2DE"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Icône actuelle -->
+                <StackPanel Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center">
+                    <Image x:Name="CurrentWeatherIcon"
+                           Width="96"
+                           Height="96"
+                           Stretch="Uniform"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- PREVISIONS PLUSIEURS JOURS -->
+        <ItemsControl Grid.Row="2" x:Name="ForecastItemsControl" Margin="0,0,0,0">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Width="140"
+                            Margin="5"
+                            Padding="10"
+                            CornerRadius="8"
+                            Background="#FF313244">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding day_long}"
+                                       FontSize="14"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center"
+                                       Foreground="White"/>
+
+                            <TextBlock Text="{Binding date}"
+                                       FontSize="12"
+                                       Margin="0,2,0,0"
+                                       HorizontalAlignment="Center"
+                                       Foreground="#FFBAC2DE"/>
+
+                            <Image Source="{Binding icon}"
+                                   Width="48"
+                                   Height="48"
+                                   Margin="0,8,0,8"
+                                   Stretch="Uniform"/>
+
+                            <TextBlock Text="{Binding condition}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       TextAlignment="Center"
+                                       Foreground="#FFBAC2DE"/>
+
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        Margin="0,8,0,0">
+                                <TextBlock Text="{Binding tmin}"
+                                           Foreground="#FF89B4FA"
+                                           FontSize="12"/>
+                                <TextBlock Text=" / "
+                                           Foreground="#FFBAC2DE"
+                                           FontSize="12"/>
+                                <TextBlock Text="{Binding tmax}"
+                                           Foreground="#FFF38BA8"
+                                           FontSize="12"/>
+                                <TextBlock Text=" °C"
+                                           Foreground="#FFBAC2DE"
+                                           FontSize="12"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </Window>
+

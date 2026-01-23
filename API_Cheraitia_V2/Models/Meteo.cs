@@ -8,7 +8,9 @@ namespace API_Cheraitia_V2.Models
 {
     public class Meteo
     {
-        public class _0H00
+
+    }
+    public class _0H00
         {
             public string ICON { get; set; }
             public string CONDITION { get; set; }
@@ -781,11 +783,8 @@ namespace API_Cheraitia_V2.Models
 
 
 
-            private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-            {
-                //ville.SaveVille();
-            }
+          
         }
-    }
-}
+    
+
 }
