@@ -6,6 +6,8 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using Newtonsoft.Json;
 using API_Cheraitia_V2.Models;
+using System.Windows.Controls;
+using System.Runtime.CompilerServices;
 
 namespace API_Cheraitia_V2
 {
@@ -44,14 +46,44 @@ namespace API_Cheraitia_V2
                 if (!string.IsNullOrEmpty(current?.icon_big))
                     CurrentWeatherIcon.Source = new BitmapImage(new Uri(current.icon_big));
 
-                // Prévisions
+                // ✅ PRÉVISIONS CORRIGÉES - adapter tmin/tmax vers tmp_min/tmp_max
                 var days = new List<object>
                 {
-                    root.fcst_day_0,
-                    root.fcst_day_1,
-                    root.fcst_day_2,
-                    root.fcst_day_3,
-                    root.fcst_day_4
+                    new {
+                        date = root.fcst_day_0?.date,
+                        tmp_min = root.fcst_day_0?.tmin,
+                        tmp_max = root.fcst_day_0?.tmax,
+                        condition = root.fcst_day_0?.condition,
+                        icon_big = root.fcst_day_0?.icon_big
+                    },
+                    new {
+                        date = root.fcst_day_1?.date,
+                        tmp_min = root.fcst_day_1?.tmin,
+                        tmp_max = root.fcst_day_1?.tmax,
+                        condition = root.fcst_day_1?.condition,
+                        icon_big = root.fcst_day_1?.icon_big
+                    },
+                    new {
+                        date = root.fcst_day_2?.date,
+                        tmp_min = root.fcst_day_2?.tmin,
+                        tmp_max = root.fcst_day_2?.tmax,
+                        condition = root.fcst_day_2?.condition,
+                        icon_big = root.fcst_day_2?.icon_big
+                    },
+                    new {
+                        date = root.fcst_day_3?.date,
+                        tmp_min = root.fcst_day_3?.tmin,
+                        tmp_max = root.fcst_day_3?.tmax,
+                        condition = root.fcst_day_3?.condition,
+                        icon_big = root.fcst_day_3?.icon_big
+                    },
+                    new {
+                        date = root.fcst_day_4?.date,
+                        tmp_min = root.fcst_day_4?.tmin,
+                        tmp_max = root.fcst_day_4?.tmax,
+                        condition = root.fcst_day_4?.condition,
+                        icon_big = root.fcst_day_4?.icon_big
+                    }
                 };
 
                 ForecastItemsControl.ItemsSource = days;
@@ -80,6 +112,19 @@ namespace API_Cheraitia_V2
                     return null;
                 }
             }
+        }
+
+        private async void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            string city = CityTextBox.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(city))
+            {
+                MessageBox.Show("Veuillez entrer une ville.");
+                return;
+            }
+
+            await LoadDataAsync(city);
         }
     }
 }
