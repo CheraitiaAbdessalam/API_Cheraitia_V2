@@ -101,7 +101,7 @@
                         <DataTemplate>
                             <Border Background="#40FFFFFF"
                                     CornerRadius="16"
-                                    Margin="4,4,4,4"
+                                    Margin="4"
                                     Padding="10">
                                 <StackPanel>
                                     <!-- Date -->
