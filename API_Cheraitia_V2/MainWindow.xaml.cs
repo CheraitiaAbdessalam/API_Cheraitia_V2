@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using Newtonsoft.Json;
 using API_Cheraitia_V2.Models;
-using System.Windows.Controls;
 using System.Runtime.CompilerServices;
+using System.Linq;
+
 
 namespace API_Cheraitia_V2
 {
@@ -15,10 +18,32 @@ namespace API_Cheraitia_V2
     {
         private const string ApiUrl = "https://www.prevision-meteo.ch/services/json/";
 
+        //  Liste des villes pour le ComboBox
+        private ObservableCollection<string> _cities = new ObservableCollection<string>
+        {
+            "Paris", "Lyon", "Marseille", "Toulouse", "Nice", "Nantes", "Montpellier",
+            "Strasbourg", "Bordeaux", "Lille", "Rennes", "Reims", "Toulon", "Grenoble", "Dijon", "Angers",
+            "Annecy", "Geneve", "Lausanne"
+        };
+
         public MainWindow()
         {
             InitializeComponent();
-            LoadDataAsync("Annecy"); // Vous pouvez changer "Annecy" par une autre ville
+
+            // : Initialiser le ComboBox
+            CityComboBox.ItemsSource = _cities;
+            CityComboBox.SelectedIndex = _cities.IndexOf("Annecy"); // Sélection par défaut
+
+            LoadDataAsync("Annecy");
+        }
+
+        //  Gestion de la sélection dans le ComboBox
+        private void CityComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CityComboBox.SelectedItem != null)
+            {
+                CityComboBox.Text = CityComboBox.SelectedItem.ToString();
+            }
         }
 
         private async Task LoadDataAsync(string city)
@@ -46,7 +71,7 @@ namespace API_Cheraitia_V2
                 if (!string.IsNullOrEmpty(current?.icon_big))
                     CurrentWeatherIcon.Source = new BitmapImage(new Uri(current.icon_big));
 
-                // ✅ PRÉVISIONS CORRIGÉES - adapter tmin/tmax vers tmp_min/tmp_max
+                // Prévisions météo (5 jours)
                 var days = new List<object>
                 {
                     new {
@@ -114,14 +139,24 @@ namespace API_Cheraitia_V2
             }
         }
 
+       
         private async void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            string city = CityTextBox.Text.Trim();
+            string city = CityComboBox.Text.Trim();
 
             if (string.IsNullOrWhiteSpace(city))
             {
                 MessageBox.Show("Veuillez entrer une ville.");
                 return;
+            }
+
+            // Ajoute la ville à la liste si elle n'existe pas déjà
+            if (!_cities.Contains(city))
+            {
+                _cities.Add(city);
+                // Rafraîchir la source pour afficher la nouvelle ville
+                CityComboBox.ItemsSource = null;
+                CityComboBox.ItemsSource = _cities;
             }
 
             await LoadDataAsync(city);

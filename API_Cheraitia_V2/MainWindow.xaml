@@ -6,6 +6,7 @@
         Width="800">
 
     <Window.Resources>
+        
         <LinearGradientBrush x:Key="WeatherBackgroundBrush"
                              StartPoint="0,0"
                              EndPoint="0,1">
@@ -31,12 +32,16 @@
                            Foreground="White"
                            Margin="0,0,0,20"/>
 
+                <!-- COMBOBOX REMPLAÇANT LA TEXTBOX -->
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                    <TextBox x:Name="CityTextBox"
-                             Width="150"
-                             Height="32"
-                             FontSize="14"
-                             Margin="0,0,0,0"/>
+                    <ComboBox x:Name="CityComboBox"
+                              Width="150"
+                              Height="32"
+                              FontSize="14"
+                              Margin="0,0,0,0"
+                              IsEditable="True"
+                              IsTextSearchEnabled="True"
+                              SelectionChanged="CityComboBox_SelectionChanged"/>
                     <Button Content="Recherche"
                             Width="80"
                             Height="32"
@@ -95,14 +100,14 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Background="#40FFFFFF"
-                CornerRadius="16"
-                Margin="2"
-                Padding="10">
+                                    CornerRadius="16"
+                                    Margin="4,4,4,4"
+                                    Padding="10">
                                 <StackPanel>
                                     <!-- Date -->
                                     <TextBlock Text="{Binding date}"
-                           FontWeight="Bold"
-                           Foreground="White"/>
+                                               FontWeight="Bold"
+                                               Foreground="White"/>
 
                                     <!-- Températures du jour (min / max) juste sous la date -->
                                     <TextBlock Foreground="White">
@@ -116,12 +121,12 @@
 
                                     <!-- Condition (texte) -->
                                     <TextBlock Text="{Binding condition}"
-                           Foreground="White"/>
+                                               Foreground="White"/>
 
                                     <!-- Icône -->
                                     <Image Source="{Binding icon_big}"
-                       Width="48"
-                       Height="48"/>
+                                           Width="48"
+                                           Height="48"/>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
