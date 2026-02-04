@@ -13,9 +13,20 @@ using System.Linq;
 
 
 namespace API_Cheraitia_V2
-{
+{   
     public partial class MainWindow : Window
     {
+        private string _selectedCity;
+public string SelectedCity
+{
+    get => _selectedCity;
+    set
+    {
+        _selectedCity = value;
+        LoadDataAsync(_selectedCity);
+    }
+}
+
         private const string ApiUrl = "https://www.prevision-meteo.ch/services/json/";
 
         //  Liste des villes pour le ComboBox
@@ -31,8 +42,8 @@ namespace API_Cheraitia_V2
             InitializeComponent();
 
             // : Initialiser le ComboBox
-            CityComboBox.ItemsSource = _cities;
-            CityComboBox.SelectedIndex = _cities.IndexOf("Annecy"); // Sélection par défaut
+            CityComboBox.SelectedIndex = _cities.IndexOf("Annecy");
+            SelectedCity = "Annecy";
 
             LoadDataAsync("Annecy");
         }
@@ -43,8 +54,10 @@ namespace API_Cheraitia_V2
             if (CityComboBox.SelectedItem != null)
             {
                 CityComboBox.Text = CityComboBox.SelectedItem.ToString();
+                SelectedCity = CityComboBox.Text; 
             }
         }
+
 
         private async Task LoadDataAsync(string city)
         {
@@ -159,7 +172,16 @@ namespace API_Cheraitia_V2
                 CityComboBox.ItemsSource = _cities;
             }
 
-            await LoadDataAsync(city);
+            SelectedCity = city;
         }
+        private void OpenParametres_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsPanel.Visibility = Visibility.Visible;
+        }
+        public void CloseParametres()
+        {
+            SettingsPanel.Visibility = Visibility.Collapsed;
+        }
+
     }
 }
